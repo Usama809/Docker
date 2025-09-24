@@ -1,0 +1,125 @@
+Overall Flow 
+Dockerfile - > images -> 1) container 2) container 3) container
+
+In Dockerfile
+FROM node:20
+
+WORKDIR /myapp
+
+COPY . .
+
+RUN npm install
+
+EXPOSE 3000
+
+CMD ["npm", "start"]
+
+Then build images (complete program , application )
+
+=> docker build .
+
+Then check images command 
+
+=> docker image ls 
+
+Then make conatiner with the help of imageID & command is below 
+=> docker run  e6ef72ba1ba4 (ImageID)
+
+How to close the terminal command if it's stuck 
+
+first check docker process status (Conatiner running) command below :
+=> docker ps 
+
+then select the conatiner name then stop, command below :
+ => docker stop tender_carver (Conatiner Name)
+
+Container bind your localhost to your browser IP directly then it's command below :
+=> docker run -p 3000:3000  e6ef72ba1ba4 (ImageID)
+
+Running container in Deteched mode (It's mean our terminal is stuck and we can't use it and fix)
+
+=> docker run -d (Deteched mood) -p 3000:3000  e6ef72ba1ba4 (ImageID)
+
+Running multiple conatiners 
+
+Making Different containers with this  command :
+  . diffrent port reserves we can say make different containers 
+
+=>docker run -d  -p 3001:3000  e6ef72ba1ba4 
+=>docker run -d  -p 3002:3000  e6ef72ba1ba4 
+
+Container remove command 
+ . First we need to stop the container then remove otherwise if your conatiner is running you can't remove directly.
+=> docker rm (remove) jovial_buck (Container name)
+
+How can be saved from this to first stop then remove conatiner we can fix this using command below:
+
+=>docker run -d --rm -p 3002:3000  e6ef72ba1ba4 
+
+We can give our names as per our choice to the conatiners, command below:
+
+=> docker run -d --rm --name "usamacontainer" -p 3002:3000  e6ef72ba1ba4   
+
+We can give the name of container images as well  , command below:
+
+   . By default image ID using this cmd  => docker build .
+   . Our choice to give name cmd = > docker build -t mywebapp(Repository):01(tag) . 
+      Full command     => docker build -t mywebapp:01 . 
+
+How can i remove the images(conatiner), command below :
+ => docker rmi mywebapp:02
+
+ Update OUR Projects 
+* So here are something to know, when you create image then you will use imageID or name to create containers, let's suppose your application is done and you created the image the name of mywebapp, but what if you need to change something in your code then your previous images (mywebapp) does not update your application on browser. You need to create the another image(mywebapp01) then run and then your browser showing your updated code.
+conculsions : You can show your previous version and new version with this strategy.
+ So here are the solution how we can saved with this mess
+*  we can create volume if we know our code needs changes time to time we can create volume -v  instead of creating images 
+again and again. we can mount or bind our file into those file which we can update our project  , command below
+=> docker run -v C:\Users\USAMA AMJAD\Desktop\Docker\testapp\src\App.js(file path which want to change):/myapp(docker file path)  --rm  mywebapp:03(image name:tag)
+=> docker run -v C:\Users\USAMA AMJAD\Desktop\Docker\testapp\src\App.js:/myapp --rm mywebapp:03
+
+
+Pre Defined Images 
+
+=> docker pull python (It's create automatically images instead of manual writing commands like docker build -t mywebapp .)
+
+
+Docker Network (we build 2 conatiners or multiple conatiners inside this network and every containers must running individually also connected to each other very easily) command below :
+ => docker network create my-net
+
+* docker-compose-yml (file name)
+
+version : '3.8'
+
+services :
+  myapp :
+     images : email-submit:01 (use your custom images)
+     container_name : myapp
+     port :
+        - "3001:3000" (Map port 3001  on the host to 3030 in the container)
+   volume :
+       - "/Users/{path}:/{appname}"/{filename} (Bind mont)
+    => "/Users/usama/email-app/email.txt:myapp/email.txt"
+   environment :
+      - PORT= 3030  (Set the invornment variable PORT)
+     restart: unless-stopped (Restart policy)
+
+To run & stop this yaml command given below:
+  Start
+=> docker-compose up -d
+  End 
+=> docker-compose down 
+
+
+
+
+
+
+
+
+
+
+
+
+
+ 
